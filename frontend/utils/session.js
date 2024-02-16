@@ -3,7 +3,7 @@ function storeToken(token) {
 }
 
 function storeUser(user) {
-  localStorage.setItem('user', user)
+  localStorage.setItem('user', JSON.stringify(user))
 }
 
 function getToken() {
@@ -11,7 +11,7 @@ function getToken() {
 }
 
 function getUser() {
-  return localStorage.getItem('user')
+  return JSON.parse(localStorage.getItem('user'))
 }
 
 function checkToken() {

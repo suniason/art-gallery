@@ -9,10 +9,10 @@ import { checkGuest } from '@/hooks/auth'
 import { AuthContext } from '@/context/authcontext'
 
 const LoginPage = () => {
-  checkGuest()
+  const route = useRouter()
+  checkGuest(route)
   const { setUserRole } = useContext(AuthContext)
 
-  const router = useRouter()
   const [credentials, setCredentials] = useState({ email: '', password: '' })
 
   const [usePostHandler, data, loading] = usePost(`${config.beport}/api/login`)
@@ -25,7 +25,7 @@ const LoginPage = () => {
       storeToken(data.token)
       storeUser(data.user)
       setUserRole('auth')
-      router.replace('/gallery')
+      route.replace('/gallery')
     }
   }, [data])
 
@@ -34,13 +34,16 @@ const LoginPage = () => {
       <Head>
         <title>Art Gallery | Log In</title>
       </Head>
-      <div>
-        <LoginForm
-          handleLogin={handleLogin}
-          credentials={credentials}
-          setCredentials={setCredentials}
-          loading={loading}
-        />
+      <div className="flex justify-center my-10">
+        <div className="w-1/2 bg-background p-10 rounded-xl">
+          <div className="text-2xl font-bold my-4 text-center">LOGIN</div>
+          <LoginForm
+            handleLogin={handleLogin}
+            credentials={credentials}
+            setCredentials={setCredentials}
+            loading={loading}
+          />
+        </div>
       </div>
     </>
   )

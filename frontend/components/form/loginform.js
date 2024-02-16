@@ -4,7 +4,7 @@ import FormInput from './input/forminput'
 const LoginForm = ({ handleLogin, credentials, setCredentials, loading }) => {
   return (
     <>
-      <div>
+      <div className="my-10">
         <FormInput
           value={credentials}
           setValue={setCredentials}
@@ -14,7 +14,7 @@ const LoginForm = ({ handleLogin, credentials, setCredentials, loading }) => {
         />
       </div>
 
-      <div>
+      <div className="my-10">
         <FormInput
           value={credentials}
           setValue={setCredentials}
@@ -23,7 +23,7 @@ const LoginForm = ({ handleLogin, credentials, setCredentials, loading }) => {
           type="password"
         />
       </div>
-      <div>
+      <div className="my-10">
         <FormButton
           handleClick={handleLogin}
           name="Login"

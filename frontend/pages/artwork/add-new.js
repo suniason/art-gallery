@@ -2,10 +2,12 @@ import AddArtworkForm from '@/components/form/addartworkform'
 import config from '@/config/config'
 import { checkAuth } from '@/hooks/auth'
 import usePost from '@/hooks/usepost'
+import { useRouter } from 'next/router'
 import { useState } from 'react'
 
 const AddArtwork = () => {
-  checkAuth()
+  const route = useRouter()
+  checkAuth(route)
   const [credentials, setCredentials] = useState({
     name: '',
     description: '',
@@ -18,6 +20,7 @@ const AddArtwork = () => {
 
   async function handleAddArtwork() {
     await usePostHandler(credentials, true)
+    route.push('/gallery')
   }
 
   return (

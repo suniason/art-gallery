@@ -7,8 +7,8 @@ import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
 
 const RegisterPage = () => {
-  checkGuest()
-  const router = useRouter()
+  const route = useRouter()
+  checkGuest(route)
   const [credentials, setCredentials] = useState({
     name: '',
     username: '',
@@ -26,7 +26,7 @@ const RegisterPage = () => {
   }
 
   useEffect(() => {
-    if (data) router.push('/login')
+    if (data) route.push('/auth/login')
   }, [data])
 
   return (

@@ -1,7 +1,7 @@
 const FormTextArea = ({ value, setValue, token, name, isDisabled = false }) => {
   return (
     <div className="mx-8 my-4">
-      <div className="my-2 text-lg font-semibold">{name}</div>
+      <div className="text-lg font-semibold">{name}</div>
       <textarea
         onChange={(e) => setValue({ ...value, [token]: e.target.value })}
         rows={6}

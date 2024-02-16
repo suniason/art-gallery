@@ -11,8 +11,8 @@ const RegisterForm = ({
   loading,
 }) => {
   return (
-    <div className="grid grid-cols-2">
-      <div>
+    <div className="grid grid-cols-3">
+      <div className="row-span-2">
         <div>
           <FormInput
             value={credentials}
@@ -47,8 +47,6 @@ const RegisterForm = ({
             type="password"
           />
         </div>
-      </div>
-      <div>
         <div>
           <FormInput
             value={credentials}
@@ -58,32 +56,38 @@ const RegisterForm = ({
             type="tel"
           />
         </div>
-        <div>
-          <FormTextArea
-            value={credentials}
-            setValue={setCredentials}
-            token="profile"
-            name="Tell us about yourself"
-          />
-        </div>
-        <div>
-          <FormUploadDropzone
-            value={credentials}
-            setValue={setCredentials}
-            token="photo"
-            endpointname="profilePhoto"
-          />
-          <div>
-            {credentials.photo && (
-              <Image
-                src={credentials.photo}
-                alt="Image Uploaded"
-                width={200}
-                height={200}
-              />
-            )}
+      </div>
+      <div className="col-span-2">
+        <FormTextArea
+          value={credentials}
+          setValue={setCredentials}
+          token="profile"
+          name="Tell us about yourself"
+        />
+      </div>
+      <div>
+        <FormUploadDropzone
+          value={credentials}
+          setValue={setCredentials}
+          token="photo"
+          endpointname="profilePhoto"
+        />
+      </div>
+      <div className="flex items-center justify-center">
+        {credentials.photo === '' ? (
+          <div className="w-48 h-48 outline outline-1 rounded-lg flex items-center justify-center">
+            Image Preview Here
           </div>
-        </div>
+        ) : (
+          <div className="flex items-center justify-center w-48 h-48 overflow-hidden outline outline-1 rounded-lg ">
+            <Image
+              src={credentials.photo}
+              alt="Image Uploaded"
+              width={200}
+              height={200}
+            />
+          </div>
+        )}
       </div>
       <div>
         <FormButton

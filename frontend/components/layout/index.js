@@ -27,7 +27,6 @@ const Layout = ({ children }) => {
     { name: 'Register', path: '/auth/register', access: 'guest' },
     { name: 'Artwork Gallery', path: '/gallery', access: 'auth' },
     { name: 'My Profile', path: '/my-profile', access: 'auth' },
-    { name: 'About', path: '/about', access: '' },
   ]
 
   const filteredOptions = options.filter((option) => {

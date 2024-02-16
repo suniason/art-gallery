@@ -39,13 +39,12 @@ class ArtworkController extends Controller
 
     public function update(Artwork $artwork)
     {
+        if (!$this->checkOwnership($artwork)) {
+            return response()->json(['error' => 'Unauthorized. You are not the owner of this artwork.'], 403);
+        }
         $attributes = request()->validate([
-            'name' => ['required', 'max:255', 'unique:artworks,name'],
             'description' => 'required',
-            'image' => 'required',
         ]);
-
-        $attributes['slug'] = str_replace(' ', '-', strtolower($attributes['name']));
 
         $artwork->update($attributes);
 
@@ -54,7 +53,16 @@ class ArtworkController extends Controller
 
     public function destroy(Artwork $artwork)
     {
+        if (!$this->checkOwnership($artwork)) {
+            return response()->json(['error' => 'Unauthorized. You are not the owner of this artwork.'], 403);
+        }
         $artwork->delete();
         return response()->json(['message' => 'Artwork Deleted Successfully.'], 200);
+    }
+
+    protected function checkOwnership(Artwork $artwork)
+    {
+        $user = Auth::user();
+        return $user->id === $artwork->user_id;
     }
 }

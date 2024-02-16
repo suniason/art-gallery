@@ -4,10 +4,12 @@ import { checkAuth } from '@/hooks/auth'
 import useGet from '@/hooks/useget'
 import Head from 'next/head'
 import Image from 'next/image'
+import { useRouter } from 'next/router'
 import { useEffect } from 'react'
 
 const ArtistPage = (props) => {
-  checkAuth()
+  const route = useRouter()
+  checkAuth(route)
   const [fetchData, data, loading] = useGet(
     `${config.beport}/api/artist/${props.username}`,
     true

@@ -1,18 +1,20 @@
-import { checkToken } from '@/utils/session'
+import { checkToken, getUser } from '@/utils/session'
 import { useRouter } from 'next/router'
 import { useEffect } from 'react'
 
-const checkAuth = () => {
-  const route = useRouter()
+const checkAuth = (route) => {
   useEffect(() => {
     if (!checkToken()) {
-      route.push('/auth/login')
+      route.replace('/auth/login')
     }
   }, [])
 }
 
-const checkGuest = () => {
-  const route = useRouter()
+const checkArtworkUser = (id) => {
+  return id !== JSON.stringify(getUser().id)
+}
+
+const checkGuest = (route) => {
   useEffect(() => {
     if (checkToken()) {
       route.push('/gallery')
@@ -20,4 +22,4 @@ const checkGuest = () => {
   }, [])
 }
 
-export { checkAuth, checkGuest }
+export { checkAuth, checkGuest, checkArtworkUser }

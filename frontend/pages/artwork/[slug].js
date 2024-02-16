@@ -3,10 +3,12 @@ import { checkAuth } from '@/hooks/auth'
 import useGet from '@/hooks/useget'
 import Head from 'next/head'
 import Image from 'next/image'
+import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
 
 const ArtworkPage = (props) => {
-  checkAuth()
+  const route = useRouter()
+  checkAuth(route)
   const [artwork, setArtwork] = useState()
   const [fetchData, data, loading] = useGet(
     `${config.beport}/api/artworks/${props.slug}`,

@@ -4,10 +4,12 @@ import { checkAuth } from '@/hooks/auth'
 import useGet from '@/hooks/useget'
 import Head from 'next/head'
 import Link from 'next/link'
+import { useRouter } from 'next/router'
 import { useEffect } from 'react'
 
 const ArtworkGalleryPage = () => {
-  checkAuth()
+  const route = useRouter()
+  checkAuth(route)
   const [fetchData, data, loading] = useGet(
     `${config.beport}/api/artworks`,
     true

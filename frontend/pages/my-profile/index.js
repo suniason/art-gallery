@@ -5,13 +5,14 @@ import { checkAuth } from '@/hooks/auth'
 import useEditProfile from '@/hooks/useeditprofile'
 import useGet from '@/hooks/useget'
 import Head from 'next/head'
+import { useRouter } from 'next/router'
 import { useEffect } from 'react'
 
 const MyProfilePage = () => {
-  checkAuth()
+  const route = useRouter()
+  checkAuth(route)
   const {
     isDisabled,
-    setIsDisabled,
     credentials,
     setCredentials,
     setPrevCredentials,
@@ -29,8 +30,8 @@ const MyProfilePage = () => {
 
   useEffect(() => {
     if (data) {
-      setCredentials(data)
-      setPrevCredentials(data)
+      setCredentials(data.user)
+      setPrevCredentials(data.user)
     }
   }, [data])
 
@@ -44,7 +45,6 @@ const MyProfilePage = () => {
       <div>
         <EditProfileForm
           isDisabled={isDisabled || isPatching}
-          setIsDisabled={setIsDisabled}
           handleEdit={handleEdit}
           handleCancel={handleCancel}
           handleSave={handleSave}
