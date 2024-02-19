@@ -17,7 +17,7 @@ class SessionController extends Controller
         if (Auth::attempt($credentials)) {
             $token = $request->user()->createToken('auth-token')->plainTextToken;
 
-            return response()->json(['token' => $token, 'user' => auth()->user()]);
+            return response()->json(['token' => $token, 'user' => auth()->user()], 200);
         }
 
         return response()->json(['message' => 'Invalid credentials'], 401);
@@ -25,8 +25,11 @@ class SessionController extends Controller
 
     public function destroy(Request $request)
     {
-        $request->user()->tokens()->delete();
-
-        return response()->json(['message' => 'Logout successful']);
+        try {
+            $request->user()->tokens()->delete();
+            return response()->json(['message' => 'Logout successful'], 200);
+        } catch (\Exception $e) {
+            return response()->json(['message' => 'Unable to logout'], 500);
+        }
     }
 }

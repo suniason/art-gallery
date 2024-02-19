@@ -22,10 +22,14 @@ const useGet = (url, isAuth = false) => {
         mode: 'cors',
         headers: header,
       })
+      if (!response.ok) {
+        const errorData = await response.json()
+        throw new Error(errorData.message || 'Something went wrong')
+      }
       const resdata = await response.json()
       setData(resdata)
     } catch (error) {
-      setError(error.message)
+      alert(error.message)
     } finally {
       setLoading(false)
     }

@@ -16,10 +16,15 @@ const useDelete = (url) => {
         mode: 'cors',
         headers: header,
       })
+      if (!response.ok) {
+        const errorData = await response.json()
+        throw new Error(errorData.message || 'Something went wrong')
+      }
 
       const resdata = await response.json()
-      console.log(resdata.message)
+      alert(resdata.message)
     } catch (error) {
+      alert(error.message)
     } finally {
       setLoading(false)
     }

@@ -19,7 +19,7 @@ const usePatch = (url) => {
       })
 
       const resdata = await response.json()
-      console.log(resdata.message)
+      alert(resdata.message)
     } catch (error) {
     } finally {
       setLoading(false)

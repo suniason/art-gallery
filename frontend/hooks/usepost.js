@@ -11,8 +11,6 @@ const usePost = (url) => {
       'Content-Type': 'application/json',
       ...(isAuth && { Authorization: getToken() }),
     }
-    console.log(bodydata)
-    console.log(header)
     try {
       const response = await fetch(url, {
         method: 'POST',
@@ -23,12 +21,12 @@ const usePost = (url) => {
 
       if (!response.ok) {
         const errorData = await response.json()
-        throw new Error(errorData.error || 'Something went wrong')
+        throw new Error(errorData.message || 'Something went wrong')
       }
       const resdata = await response.json()
       setData(resdata)
     } catch (error) {
-      console.log(error.message)
+      alert(error.message)
     } finally {
       setLoading(false)
     }

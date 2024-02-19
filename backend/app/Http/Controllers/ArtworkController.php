@@ -3,9 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\Artwork;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Validation\Rule;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Validation\ValidationException;
+
 
 class ArtworkController extends Controller
 {
@@ -16,48 +17,75 @@ class ArtworkController extends Controller
 
     public function show(Artwork $artwork)
     {
-        return Artwork::with('user')->findOrFail($artwork->id);
+        try {
+            $artworkWithUser = Artwork::with('user')->findOrFail($artwork->id);
+            return response()->json($artworkWithUser, 200);
+        } catch (ModelNotFoundException $e) {
+            return response()->json(['error' => 'Artwork not found.'], 404);
+        }
     }
 
 
     public function store()
     {
-        $user_id = Auth::id();
+        try {
 
-        $attributes = request()->validate([
-            'name' => ['required', 'max:255', 'unique:artworks,name'],
-            'description' => 'required',
-            'image' => 'required',
-        ]);
-        $attributes['user_id'] = $user_id;
-        $attributes['slug'] = str_replace(' ', '-', strtolower($attributes['name']));
+            $user_id = Auth::id();
 
-        $artwork = Artwork::create($attributes);
+            $attributes = request()->validate([
+                'name' => ['required', 'max:255', 'unique:artworks,name'],
+                'description' => 'required',
+                'image' => 'required',
+            ]);
+            $attributes['user_id'] = $user_id;
+            $attributes['slug'] = str_replace(' ', '-', strtolower($attributes['name']));
 
-        return response()->json(['artwork' => $artwork], 200);
+            $artwork = Artwork::create($attributes);
+
+            return response()->json(['artwork' => $artwork], 200);
+        } catch (ValidationException $e) {
+            return response()->json(['error' => $e->errors()], 422);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Internal Server Error'], 500);
+        }
     }
 
     public function update(Artwork $artwork)
     {
-        if (!$this->checkOwnership($artwork)) {
-            return response()->json(['error' => 'Unauthorized. You are not the owner of this artwork.'], 403);
+        try {
+            if (!$this->checkOwnership($artwork)) {
+                return response()->json(['error' => 'Unauthorized. You are not the owner of this artwork.'], 403);
+            }
+
+            $attributes = request()->validate([
+                'description' => 'required',
+            ]);
+
+            $artwork->update($attributes);
+
+            return response()->json(['message' => 'Artwork Updated Successfully.'], 200);
+        } catch (ValidationException $e) {
+            return response()->json(['error' => $e->errors()], 422);
+        } catch (ModelNotFoundException $e) {
+            return response()->json(['error' => 'Artwork not found.'], 404);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Internal Server Error'], 500);
         }
-        $attributes = request()->validate([
-            'description' => 'required',
-        ]);
-
-        $artwork->update($attributes);
-
-        return response()->json(['message' => 'Artwork Updated Successfully.'], 200);
     }
 
     public function destroy(Artwork $artwork)
     {
-        if (!$this->checkOwnership($artwork)) {
-            return response()->json(['error' => 'Unauthorized. You are not the owner of this artwork.'], 403);
+        try {
+            if (!$this->checkOwnership($artwork)) {
+                return response()->json(['error' => 'Unauthorized. You are not the owner of this artwork.'], 403);
+            }
+            $artwork->delete();
+            return response()->json(['message' => 'Artwork Deleted Successfully.'], 200);
+        } catch (ModelNotFoundException $e) {
+            return response()->json(['error' => 'Artwork not found.'], 404);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Internal Server Error'], 500);
         }
-        $artwork->delete();
-        return response()->json(['message' => 'Artwork Deleted Successfully.'], 200);
     }
 
     protected function checkOwnership(Artwork $artwork)

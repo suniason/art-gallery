@@ -21,7 +21,7 @@ const useLogoutPost = (url) => {
       const resdata = await response.json()
       setData(resdata)
     } catch (error) {
-      console.log(error.message)
+      alert(error.message)
     } finally {
       setLoading(false)
     }
